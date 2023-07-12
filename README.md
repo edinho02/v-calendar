@@ -3,7 +3,7 @@
       <img width="200" src="https://res.cloudinary.com/dqgcfqzpk/image/upload/v1557324348/v-calendar/hero.png">
     </a>
     <br>
-    An elegant calendar and datepicker plugin for Vuejs.
+    Extended version of v-calendar with weekly for vue 2
 </p>
 
 <p align="center">
@@ -14,9 +14,10 @@
 </p>
 
 ------
-
+For Vue 2
 ```bash
-npm i --save v-calendar
+npm i --save v-calendar-enriched
+yarn add v-calendar-enriched
 ```
 
 ## Documentation
