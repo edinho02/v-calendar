@@ -39,7 +39,7 @@ export default {
   render(h) {
     // Renderer for calendar panes
     const panes = this.pages.map((page, i) => {
-      const view = 'mounth';
+      const view = 'month';
       const position = i + 1;
       const row = Math.ceil((i + 1) / this.columns);
       const rowFromEnd = this.rows - row + 1;
@@ -282,10 +282,10 @@ export default {
     },
     view: {
       type: String,
-      default: 'mounth',
+      default: 'month',
       require: false,
       validator(value) {
-        return ['mounth', 'weekly'].includes(value);
+        return ['month', 'weekly'].includes(value);
       },
     },
     step: Number,
@@ -357,6 +357,9 @@ export default {
     $theme() {
       this.refreshTheme();
       this.initStore();
+    },
+    view() {
+      this.refreshPages({ page: this.pages[0], ignoreCache: true });
     },
     fromDate() {
       this.refreshPages();
@@ -494,13 +497,7 @@ export default {
 
       // Move page week on weekly view
       const currentPage = this.pages[0];
-      // if (currentPage.firstWeekMove) {
-      //   currentPage.currentWeek = currentPage.month > opts.fromPage.month ? currentPage.lastWeek : 0;
-      //   currentPage.firstWeekMove = false;
-      // }
 
-      console.debug(currentPage.month);
-      console.debug(opts.fromPage);
       if (this.checkAndMovePageWeek(currentPage, opts.fromPage)) {
         return Promise.resolve(true);
       }
@@ -756,9 +753,6 @@ export default {
         } else {
           page.currentWeek = page.lastWeek;
         }
-        // console.debug(this.pages[0]?.mounth);
-        console.debug(page.mounth);
-        console.debug(page.currentWeek);
       }
 
       return page;
