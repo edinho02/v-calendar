@@ -1,6 +1,6 @@
 {
   "name": "v-calendar-enriched",
-  "version": "2.5.0",
+  "version": "2.5.7",
   "private": false,
   "description": "A clean and extendend version of plugin v-calendar",
   "author": "Edson Machado Andreassa <andreassa181@gmail.com> and Nathan Reyes <nathanreyes@me.com>",
@@ -18,7 +18,7 @@
     "dev": "vuepress dev docs",
     "test": "vue-cli-service test:unit --watch"
   },
-  "main": "lib/v-calendar.umd.min.js",
+  "main": "lib/v-calendar-enriched.umd.min.js",
   "files": [
     "src",
     "lib"
@@ -76,6 +76,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nathanreyes/v-calendar"
+    "url": "https://github.com/edinho02/v-calendar"
   }
 }
