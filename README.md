@@ -9,11 +9,11 @@
 ------
 
 ```sh
-npm i --save v-calendar-enriched
+npm i --save v-calendar-newstar
 ```
 
 ```yarn
-yarn add v-calendar-enriched
+yarn add v-calendar-newstar
 ```
 
 ## Documentation
