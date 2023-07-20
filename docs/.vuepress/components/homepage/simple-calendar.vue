@@ -2,8 +2,21 @@
   <div class="section">
     <div class="bg-gray-400 pt-10 pb-20 rounded-3xl mb-5">
       <div class="font-medium text-3xl mb-6">Dev test</div>
-      <v-calendar view="weekly" ref="cal" />
-      <v-calendar ref="cal" />
+      <div>
+        <button
+          class="p-2 bg-blue-100 border border-green hover:bg-green text-green-600 rounded-lg focus:outline-none mb-3"
+          @click="focusDay"
+        >
+          Focus
+        </button>
+        <button
+          class="p-2 bg-blue-100 border border-green hover:bg-green text-green-600 rounded-lg focus:outline-none mb-3"
+          @click="weeklyToggle"
+        >
+          Weekly toggle
+        </button>
+      </div>
+      <v-calendar :view="devWeeklyView ? 'weekly' : 'month'" ref="calendarWeekly" />
     </div>
 
     <h2>Calendar Attributes</h2>
@@ -175,6 +188,7 @@ export default {
     return {
       pageForThisMonth: null,
       pageForNextMonth: null,
+      devWeeklyView: true,
       incId: 5,
       editId: 0,
       todos: [],
@@ -372,6 +386,15 @@ export default {
       const { month, year } = locale.getThisMonthComps();
       this.pageForThisMonth = { month, year };
       this.pageForNextMonth = locale.getNextMonthComps(month, year);
+    },
+    weeklyToggle: async function () {
+      this.devWeeklyView = !this.devWeeklyView;
+      this.focusDay();
+    },
+    focusDay: async function () {
+      const today = new Date();
+      await this.$nextTick();
+      this.$refs.calendarWeekly.move(today, { focusOnDay: { day: today.getDate(), month: today.getMonth() + 1, year: today.getFullYear() } });
     },
     refreshTodos() {
       this.todos = [

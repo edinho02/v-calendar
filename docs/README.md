@@ -16,11 +16,11 @@ pageClass: 'homepage'
 ### An elegant calendar and datepicker plugin for Vuejs.
 
 ```sh
-npm i --save v-calendar-enriched
+npm i --save v-calendar-newstar
 ```
 
 ```yarn
-yarn add v-calendar-enriched
+yarn add v-calendar-newstar
 ```
 
 <homepage-simple-calendar />

@@ -360,6 +360,7 @@ export default {
     },
     view() {
       this.refreshPages({ page: this.pages[0], ignoreCache: true });
+      this.refreshAttrs(this.pages, this.store.list, null, true);
     },
     fromDate() {
       this.refreshPages();
@@ -498,7 +499,16 @@ export default {
       // Move page week on weekly view
       const currentPage = this.pages[0];
 
-      if (this.checkAndMovePageWeek(currentPage, opts.fromPage)) {
+      if (opts.focusOnDay && currentPage && opts.focusOnDay.year === currentPage.year && opts.focusOnDay.month === currentPage.month) {
+        return this.refreshPages({
+          ...opts,
+          page: currentPage,
+          ignoreCache: true
+        });
+      }
+
+      if (!opts.focusOnDay && this.checkAndMovePageWeek(currentPage, opts.fromPage)) {
+        this.refreshAttrs(this.pages, this.store.list, null, true);
         return Promise.resolve(true);
       }
 
@@ -620,7 +630,7 @@ export default {
       }
       return page;
     },
-    refreshPages({ page, position = 1, force, transition, ignoreCache } = {}) {
+    refreshPages({ page, position = 1, force, transition, ignoreCache, focusOnDay } = {}) {
       return new Promise((resolve, reject) => {
         const { fromPage, toPage } = this.getTargetPageRange(page, {
           position,
@@ -629,7 +639,7 @@ export default {
         // Create the new pages
         const pages = [];
         for (let i = 0; i < this.count; i++) {
-          pages.push(this.buildPage(addPages(fromPage, i), ignoreCache));
+          pages.push(this.buildPage(addPages(fromPage, i), ignoreCache, focusOnDay));
         }
         // Refresh disabled days for new pages
         this.refreshDisabledDays(pages);
@@ -699,7 +709,7 @@ export default {
       }
       return page;
     },
-    buildPage({ month, year }, ignoreCache) {
+    buildPage({ month, year }, ignoreCache, focusOnDay) {
       const key = `${year.toString()}-${month.toString()}`;
       let page = this.pages.find(p => p.key === key);
       if (!page || ignoreCache) {
@@ -721,6 +731,7 @@ export default {
           monthComps,
           prevMonthComps,
           nextMonthComps,
+          weekDays: [],
           canMove: pg => this.canMove(pg),
           move: pg => this.move(pg),
           moveThisMonth: () => this.moveThisMonth(),
@@ -732,7 +743,8 @@ export default {
         page.days = this.$locale.getCalendarDays(page);
 
         // Map days for weekly view
-        page.weekDays = page.days.filter(day => !day.inPrevMonth).reduce((list, day) => {
+        const weekIndexesToKeep = {};
+        const pageWeeks = page.days.reduce((list, day) => {
           const lastListOverflow = list[list.length - 1] && list[list.length - 1].length >= 7;
           if (day.inNextMonth && lastListOverflow) {
             return list;
@@ -740,15 +752,35 @@ export default {
 
           if (!list[list.length - 1] || lastListOverflow) {
             list.push([]);
+            weekIndexesToKeep[list.length - 1] = false;
           }
 
           list[list.length - 1].push(day);
+          weekIndexesToKeep[list.length - 1] = weekIndexesToKeep[list.length - 1] || day.inMonth;
           return list;
         }, []);
 
+        Object.keys(weekIndexesToKeep).forEach(weekIndex => {
+          if (!weekIndexesToKeep[weekIndex]) {
+            return;
+          }
+
+          page.weekDays.push(pageWeeks[weekIndex]);
+        });
+
         page.lastWeek = page.weekDays.length - 1;
 
-        if (!this.pages[0] || this.pages[0].month < page.month) {
+        if (focusOnDay) {
+          page.currentWeek = page.weekDays.reduce((index, week, weekIndex) => {
+            if (index) return index;
+
+            if (week.find(day => focusOnDay.day === day.day && focusOnDay.month === day.month && focusOnDay.year === day.year)) {
+              return weekIndex;
+            }
+
+            return index;
+          }, 0);
+        } else if (!this.pages[0] || this.pages[0].month < page.month) {
           page.currentWeek = 0;
         } else {
           page.currentWeek = page.lastWeek;

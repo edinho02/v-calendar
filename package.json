@@ -1,8 +1,8 @@
 {
-  "name": "v-calendar-enriched",
-  "version": "2.5.7",
+  "name": "v-calendar-newstar",
+  "version": "2.0.1",
   "private": false,
-  "description": "A clean and extendend version of plugin v-calendar",
+  "description": "A clean and extended version of plugin v-calendar",
   "author": "Edson Machado Andreassa <andreassa181@gmail.com> and Nathan Reyes <nathanreyes@me.com>",
   "scripts": {
     "serve": "vue-cli-service serve src/lib.js",
@@ -18,7 +18,7 @@
     "dev": "vuepress dev docs",
     "test": "vue-cli-service test:unit --watch"
   },
-  "main": "lib/v-calendar-enriched.umd.min.js",
+  "main": "lib/v-calendar-newstar.umd.min.js",
   "files": [
     "src",
     "lib"
